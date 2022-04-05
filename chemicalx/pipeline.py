@@ -9,6 +9,7 @@ from typing import Any, List, Mapping, Optional, Sequence, Type, Union
 
 import pandas as pd
 import torch
+import wandb
 from class_resolver import FunctionResolver, HintOrType
 from sklearn.metrics import mean_absolute_error, mean_squared_error, roc_auc_score
 from tabulate import tabulate
@@ -71,23 +72,23 @@ class Result:
 
 
 def pipeline(
-    *,
-    dataset: HintOrType[DatasetLoader],
-    model: HintOrType[Model],
-    model_kwargs: Optional[Mapping[str, Any]] = None,
-    optimizer_cls: Type[Optimizer] = torch.optim.Adam,
-    optimizer_kwargs: Optional[Mapping[str, Any]] = None,
-    loss_cls: Type[_Loss] = torch.nn.BCELoss,
-    loss_kwargs: Optional[Mapping[str, Any]] = None,
-    batch_size: int = 512,
-    epochs: int,
-    context_features: bool,
-    drug_features: bool,
-    drug_molecules: bool,
-    train_size: Optional[float] = None,
-    random_state: Optional[int] = None,
-    metrics: Optional[Sequence[str]] = None,
-    device: Device = None,
+        *,
+        dataset: HintOrType[DatasetLoader],
+        model: HintOrType[Model],
+        model_kwargs: Optional[Mapping[str, Any]] = None,
+        optimizer_cls: Type[Optimizer] = torch.optim.Adam,
+        optimizer_kwargs: Optional[Mapping[str, Any]] = None,
+        loss_cls: Type[_Loss] = torch.nn.BCELoss,
+        loss_kwargs: Optional[Mapping[str, Any]] = None,
+        batch_size: int = 512,
+        epochs: int,
+        context_features: bool,
+        drug_features: bool,
+        drug_molecules: bool,
+        train_size: Optional[float] = None,
+        random_state: Optional[int] = None,
+        metrics: Optional[Sequence[str]] = None,
+        device: Device = None,
 ) -> Result:
     """Run the training and evaluation pipeline.
 
@@ -163,6 +164,7 @@ def pipeline(
             optimizer.zero_grad()
             prediction = model(*model.unpack(batch))
             loss_value = loss(prediction, batch.labels)
+            wandb.log({'train/loss': loss_value.item()})
             losses.append(loss_value.item())
             loss_value.backward()
             optimizer.step()

@@ -1,5 +1,7 @@
 """Example with DeepDDI."""
 
+import wandb
+
 from chemicalx import pipeline
 from chemicalx.data import DrugbankDDI
 from chemicalx.models import DeepDDI
@@ -8,6 +10,9 @@ from chemicalx.models import DeepDDI
 def main():
     """Train and evaluate the DeepSynergy model."""
     dataset = DrugbankDDI()
+    wandb.init(project='ChemicalX',
+               name='DeepDDI',
+               tags=['baseline', 'example', 'DrugbankDDIs'])
     model = DeepDDI(drug_channels=dataset.drug_channels, hidden_layers_num=2)
     results = pipeline(
         dataset=dataset,

@@ -1,5 +1,7 @@
 """Example with DeepSynergy."""
 
+import wandb
+
 from chemicalx import pipeline
 from chemicalx.data import DrugCombDB
 from chemicalx.models import DeepSynergy
@@ -7,6 +9,9 @@ from chemicalx.models import DeepSynergy
 
 def main():
     """Train and evaluate the DeepSynergy model."""
+    wandb.init(project='ChemicalX',
+               name='DeepSynergy',
+               tags=['baseline', 'example', 'DrugCombDB'])
     dataset = DrugCombDB()
     model = DeepSynergy(context_channels=dataset.context_channels, drug_channels=dataset.drug_channels)
     results = pipeline(

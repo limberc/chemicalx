@@ -5,6 +5,7 @@ output instead of a binary one, the MSE loss is used instead
 of the BCE loss.
 """
 
+import wandb
 from torch import nn
 
 from chemicalx import pipeline
@@ -14,6 +15,9 @@ from chemicalx.models import DeepSynergy
 
 def main():
     """Train and evaluate the DeepSynergy model."""
+    wandb.init(project='ChemicalX',
+               name='DeepSynergy',
+               tags=['baseline', 'example', 'OncoPolyPharmacology'])
     dataset = OncoPolyPharmacology()
     dataset.summarize()
     model = DeepSynergy(context_channels=dataset.context_channels, drug_channels=dataset.drug_channels)

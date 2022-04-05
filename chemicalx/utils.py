@@ -64,7 +64,7 @@ def segment_softmax(
     return prob
 
 
-def resolve_device(device: Device = None) -> torch.device:
+def resolve_device(device: Device = "gpu") -> torch.device:
     """Resolve a :class:`torch.device` given a desired device name.
 
     :param device: A pre-instantiated :class:`torch.device`, a string to infer

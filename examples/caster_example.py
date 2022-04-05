@@ -1,5 +1,7 @@
 """Example with CASTER."""
 
+import wandb
+
 from chemicalx import pipeline
 from chemicalx.data import DrugCombDB
 from chemicalx.loss import CASTERSupervisedLoss
@@ -8,6 +10,9 @@ from chemicalx.models import CASTER
 
 def main():
     """Train and evaluate the CASTER model."""
+    wandb.init(project='ChemicalX',
+               name='CASTER',
+               tags=['baseline', 'example', 'DrugCombDB'])
     dataset = DrugCombDB()
     model = CASTER(drug_channels=dataset.drug_channels)
     results = pipeline(

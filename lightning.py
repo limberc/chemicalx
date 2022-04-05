@@ -46,7 +46,7 @@ class LightningPipeline(LightningModule):
         loss_val = self.loss(logists, batch.labels)
         if isinstance(logists, Sequence):
             logists = logists[0]
-        self.log('train/loss', loss_val, on_step=True, on_epoch=True)
+        self.log('val/loss', loss_val, on_step=True, on_epoch=True)
         for key in self.metric_dict.keys():
             score = self.metric_dict[key](batch.labelss, logists)
             self.log('val/{}'.format(key), score, on_step=True, on_epoch=True)

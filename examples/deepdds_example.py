@@ -1,5 +1,7 @@
 """Example with DeepDDs."""
 
+import wandb
+
 from chemicalx import pipeline
 from chemicalx.data import DrugCombDB
 from chemicalx.models import DeepDDS
@@ -8,6 +10,9 @@ from chemicalx.models import DeepDDS
 def main():
     """Train and evaluate the DeepDDs model."""
     dataset = DrugCombDB()
+    wandb.init(project='ChemicalX',
+               name='DeepDDS',
+               tags=['baseline', 'example', 'DrugCombDB'])
     model = DeepDDS(
         context_channels=dataset.context_channels,
     )

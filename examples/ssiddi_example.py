@@ -1,5 +1,7 @@
 """Example with SSI-DDI."""
 
+import wandb
+
 from chemicalx import pipeline
 from chemicalx.data import DrugCombDB
 from chemicalx.models import SSIDDI
@@ -9,10 +11,13 @@ def main():
     """Train and evaluate the SSIDDI model."""
     dataset = DrugCombDB()
     model = SSIDDI()
+    wandb.init(project='ChemicalX',
+               name='SSIDDI',
+               tags=['baseline', 'example', 'DrugCombDB'])
     results = pipeline(
         dataset=dataset,
         model=model,
-        optimizer_kwargs=dict(lr=0.01, weight_decay=10**-7),
+        optimizer_kwargs=dict(lr=0.01, weight_decay=10 ** -7),
         batch_size=1024,
         epochs=20,
         context_features=True,
