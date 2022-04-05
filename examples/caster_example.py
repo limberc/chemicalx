@@ -3,7 +3,7 @@
 import wandb
 
 from chemicalx import pipeline
-from chemicalx.data import DrugCombDB
+from chemicalx.data import LocalExampleDatasetLoader
 from chemicalx.loss import CASTERSupervisedLoss
 from chemicalx.models import CASTER
 
@@ -13,7 +13,8 @@ def main():
     wandb.init(project='ChemicalX',
                name='CASTER',
                tags=['baseline', 'example', 'DrugCombDB'])
-    dataset = DrugCombDB()
+    # dataset = DrugCombDB()
+    dataset = LocalExampleDatasetLoader('drugcombdb', 'dataset')
     model = CASTER(drug_channels=dataset.drug_channels)
     results = pipeline(
         dataset=dataset,

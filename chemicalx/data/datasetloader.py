@@ -3,6 +3,7 @@
 import csv
 import io
 import json
+import os
 import urllib.request
 from abc import ABC, abstractmethod
 from functools import lru_cache
@@ -39,13 +40,13 @@ class DatasetLoader(ABC):
     """A generic dataset."""
 
     def get_generators(
-        self,
-        batch_size: int,
-        context_features: bool,
-        drug_features: bool,
-        drug_molecules: bool,
-        train_size: Optional[float] = None,
-        random_state: Optional[int] = None,
+            self,
+            batch_size: int,
+            context_features: bool,
+            drug_features: bool,
+            drug_molecules: bool,
+            train_size: Optional[float] = None,
+            random_state: Optional[int] = None,
     ) -> Tuple[BatchGenerator, BatchGenerator]:
         """Generate a pre-stratified pair of batch generators."""
         return cast(
@@ -66,12 +67,12 @@ class DatasetLoader(ABC):
         )
 
     def get_generator(
-        self,
-        batch_size: int,
-        context_features: bool,
-        drug_features: bool,
-        drug_molecules: bool,
-        labeled_triples: Optional[LabeledTriples] = None,
+            self,
+            batch_size: int,
+            context_features: bool,
+            drug_features: bool,
+            drug_molecules: bool,
+            labeled_triples: Optional[LabeledTriples] = None,
     ) -> BatchGenerator:
         """Initialize a batch generator.
 
@@ -156,7 +157,7 @@ class RemoteDatasetLoader(DatasetLoader):
         :param dataset_name: The name of the dataset.
         """
         self.base_url = "https://raw.githubusercontent.com/AstraZeneca/chemicalx/main/dataset"
-        self.dataset_name = dataset_name
+        self.dataset_name = dataset_name.lower()
         assert dataset_name in ["drugcombdb", "drugcomb", "twosides", "drugbankddi"]
 
     def generate_path(self, file_name: str) -> str:
@@ -248,6 +249,37 @@ class DrugbankDDI(RemoteDatasetLoader):
         super().__init__("drugbankddi")
 
 
+class LocalExampleDatasetLoader(RemoteDatasetLoader):
+    def __init__(self, dataset_name: str, path=None):
+        """Instantiate the dataset loader.
+
+        :param dataset_name: The name of the dataset.
+        """
+        super(LocalExampleDatasetLoader, self).__init__(dataset_name)
+        if path is not None:
+            self.base_url = path
+
+    def load_raw_json_data(self, path: str):
+        """Load a raw JSON dataset at the given path.
+
+        :param path: The path to the JSON file.
+        :returns: A dictionary with the data.
+        """
+        with open(path, 'r') as f:
+            raw_data = json.load(f)
+        return raw_data
+
+    def load_raw_csv_data(self, path: str) -> pd.DataFrame:
+        """Load a CSV dataset at the given path.
+
+        :param path: The path to the triples CSV file.
+        :returns: A pandas DataFrame with the data.
+        """
+        types = {"drug_1": str, "drug_2": str, "context": str, "label": float}
+        raw_data = pd.read_csv(path, encoding="utf8", sep=",", dtype=types)
+        return raw_data
+
+
 class LocalDatasetLoader(DatasetLoader, ABC):
     """A dataset loader that processes and caches data locally."""
 
@@ -265,8 +297,8 @@ class LocalDatasetLoader(DatasetLoader, ABC):
         self.labels_path = self.directory.joinpath(self.labels_name)
 
         if any(
-            not path.exists()
-            for path in (self.drug_features_path, self.drug_structures_path, self.contexts_path, self.labels_path)
+                not path.exists()
+                for path in (self.drug_features_path, self.drug_structures_path, self.contexts_path, self.labels_path)
         ):
             self.preprocess()
 

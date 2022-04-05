@@ -3,13 +3,13 @@
 import wandb
 
 from chemicalx import pipeline
-from chemicalx.data import DrugbankDDI
+from chemicalx.data import LocalExampleDatasetLoader
 from chemicalx.models import DeepDDI
 
 
 def main():
     """Train and evaluate the DeepSynergy model."""
-    dataset = DrugbankDDI()
+    dataset = LocalExampleDatasetLoader('drugbankddi', 'dataset')
     wandb.init(project='ChemicalX',
                name='DeepDDI',
                tags=['baseline', 'example', 'DrugbankDDIs'])

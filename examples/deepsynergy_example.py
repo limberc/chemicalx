@@ -3,7 +3,7 @@
 import wandb
 
 from chemicalx import pipeline
-from chemicalx.data import DrugCombDB
+from chemicalx.data import LocalExampleDatasetLoader
 from chemicalx.models import DeepSynergy
 
 
@@ -12,7 +12,7 @@ def main():
     wandb.init(project='ChemicalX',
                name='DeepSynergy',
                tags=['baseline', 'example', 'DrugCombDB'])
-    dataset = DrugCombDB()
+    dataset = LocalExampleDatasetLoader('drugcombdb', 'dataset')
     model = DeepSynergy(context_channels=dataset.context_channels, drug_channels=dataset.drug_channels)
     results = pipeline(
         dataset=dataset,

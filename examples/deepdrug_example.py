@@ -2,6 +2,8 @@
 
 from chemicalx import pipeline
 from chemicalx.data import DrugCombDB
+from chemicalx.data import LocalExampleDatasetLoader
+
 from chemicalx.models import DeepDrug
 import wandb
 
@@ -10,7 +12,7 @@ def main():
     wandb.init(project='ChemicalX',
                name='DeepDrug',
                tags=['baseline', 'example', 'DrugCombDB'])
-    dataset = DrugCombDB()
+    dataset = LocalExampleDatasetLoader('drugcombdb', 'dataset')
     model = DeepDrug()
     results = pipeline(
         dataset=dataset,

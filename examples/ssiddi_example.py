@@ -3,13 +3,14 @@
 import wandb
 
 from chemicalx import pipeline
-from chemicalx.data import DrugCombDB
+from chemicalx.data import LocalExampleDatasetLoader
 from chemicalx.models import SSIDDI
 
 
 def main():
     """Train and evaluate the SSIDDI model."""
-    dataset = DrugCombDB()
+    dataset = LocalExampleDatasetLoader('drugcombdb', 'dataset')
+
     model = SSIDDI()
     wandb.init(project='ChemicalX',
                name='SSIDDI',

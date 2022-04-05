@@ -13,6 +13,7 @@ from .datasetloader import (
     OncoPolyPharmacology,
     RemoteDatasetLoader,
     TwoSides,
+    LocalExampleDatasetLoader
 )
 from .drugfeatureset import DrugFeatureSet
 from .drugpairbatch import DrugPairBatch
@@ -35,6 +36,7 @@ __all__ = [
     "DrugComb",
     "DrugCombDB",
     "OncoPolyPharmacology",
+    "LocalExampleDatasetLoader"
 ]
 
 dataset_resolver = Resolver.from_subclasses(base=DatasetLoader, skip={RemoteDatasetLoader, LocalDatasetLoader})

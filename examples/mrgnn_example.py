@@ -3,13 +3,14 @@
 import wandb
 
 from chemicalx import pipeline
-from chemicalx.data import DrugCombDB
+from chemicalx.data import LocalExampleDatasetLoader
 from chemicalx.models import MRGNN
 
 
 def main():
     """Train and evaluate the MRGNN model."""
-    dataset = DrugCombDB()
+    dataset = LocalExampleDatasetLoader('drugcombdb', 'dataset')
+
     model = MRGNN()
     wandb.init(project='ChemicalX',
                name='MRGNN',

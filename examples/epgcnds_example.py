@@ -3,7 +3,7 @@
 import wandb
 
 from chemicalx import pipeline
-from chemicalx.data import DrugCombDB
+from chemicalx.data import LocalExampleDatasetLoader
 from chemicalx.models import EPGCNDS
 
 
@@ -12,7 +12,8 @@ def main():
     wandb.init(project='ChemicalX',
                name='EPGCNDS',
                tags=['baseline', 'example', 'DrugCombDB'])
-    dataset = DrugCombDB()
+    dataset = LocalExampleDatasetLoader('drugcombdb', 'dataset')
+
     model = EPGCNDS()
     results = pipeline(
         dataset=dataset,

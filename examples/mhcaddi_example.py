@@ -3,13 +3,14 @@
 import wandb
 
 from chemicalx import pipeline
-from chemicalx.data.datasetloader import TwoSides
+from chemicalx.data import LocalExampleDatasetLoader
 from chemicalx.models.mhcaddi import MHCADDI
 
 
 def main():
     """Train and evaluate the MHCADDI model."""
-    dataset = TwoSides()
+    dataset = LocalExampleDatasetLoader('twosides', 'dataset')
+
     model = MHCADDI(atom_feature_channels=69, atom_type_channels=100, bond_type_channels=12)
     wandb.init(project='ChemicalX',
                name='MHCADDI',

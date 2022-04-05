@@ -1,13 +1,13 @@
 """Example with MatchMaker."""
 
 from chemicalx import pipeline
-from chemicalx.data import DrugCombDB
+from chemicalx.data import LocalExampleDatasetLoader
 from chemicalx.models import MatchMaker
 import wandb
 
 def main():
     """Train and evaluate the MatchMaker model."""
-    dataset = DrugCombDB()
+    dataset = LocalExampleDatasetLoader('drugcombdb', 'dataset')
     model = MatchMaker(context_channels=dataset.context_channels, drug_channels=dataset.drug_channels)
     wandb.init(project='ChemicalX',
                name='MatchMaker',

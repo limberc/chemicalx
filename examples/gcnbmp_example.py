@@ -3,13 +3,13 @@
 import wandb
 
 from chemicalx import pipeline
-from chemicalx.data import DrugCombDB
+from chemicalx.data import LocalExampleDatasetLoader
 from chemicalx.models import GCNBMP
 
 
 def main():
     """Train and evaluate the GCNBMP model."""
-    dataset = DrugCombDB()
+    dataset = LocalExampleDatasetLoader('drugcombdb', 'dataset')
     model = GCNBMP(hidden_conv_layers=2)
     wandb.init(project='ChemicalX',
                name='GCNBMP',
